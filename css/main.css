@@ -1769,6 +1769,7 @@ footer {
     gap: 0;
     padding: var(--space-lg) 0;
     box-shadow: var(--shadow-lg);
+    border-top: 1px solid var(--color-border);
   }
   
   nav > ul.show {
@@ -1780,29 +1781,73 @@ footer {
     padding: var(--space-md) var(--space-lg);
   }
 
+  .nav-dropdown {
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .nav-dropdown > a {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--space-md);
+    padding-right: var(--space-lg);
+  }
+
+  .nav-dropdown > a::after {
+    content: '▾';
+    font-size: 14px;
+    color: var(--color-text-muted);
+    transition: transform 0.25s ease;
+  }
+
+  .nav-dropdown.open > a::after {
+    transform: rotate(180deg);
+  }
+
   .dropdown-menu {
     position: static;
-    display: none;
+    display: flex;
+    flex-direction: column;
     width: 100%;
     max-width: none;
     min-width: 0;
     margin: 0;
-    padding: 0 0 0 var(--space-lg);
+    padding: 0;
     background-color: transparent;
     border: none;
     border-radius: 0;
     box-shadow: none;
-    opacity: 1;
-    visibility: visible;
-    transform: none;
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    visibility: hidden;
+    transition: max-height 0.28s ease, opacity 0.28s ease;
   }
 
   .nav-dropdown.open .dropdown-menu {
-    display: flex;
+    max-height: 800px;
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .dropdown-menu li {
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+  }
+
+  .dropdown-menu li:last-child {
+    border-bottom: none;
   }
 
   .dropdown-menu a {
-    padding: var(--space-sm) var(--space-lg);
+    padding: var(--space-sm) calc(var(--space-lg) + 1.5rem);
+    background-color: var(--color-white);
+    color: var(--color-text-dark);
+    font-weight: var(--font-weight-regular);
+  }
+
+  .dropdown-menu a:hover {
+    background-color: var(--color-light-bg);
+    color: var(--color-accent);
   }
   
   .hamburger {
@@ -1893,8 +1938,8 @@ footer {
   }
   
   .whatsapp-float {
-    width: 50px;
-    height: 50px;
+    width: 85px;
+    height: 85px;
     bottom: 80px;
     right: 20px;
     font-size: 24px;
