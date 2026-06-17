@@ -1,0 +1,56 @@
+# Adept Pharma Website - Git Ignore
+
+# System Files
+.DS_Store
+Thumbs.db
+.env
+.env.local
+
+# IDE/Editor Files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.sublime-project
+.sublime-workspace
+
+# Node (if using in future)
+node_modules/
+npm-debug.log
+yarn-error.log
+package-lock.json
+yarn.lock
+
+# Build & Temp
+dist/
+build/
+*.zip
+*.tar.gz
+
+# Credentials & Secrets
+.htpasswd
+.credentials
+secrets.json
+config.local.js
+
+# Backups
+*.bak
+*.backup
+*~
+
+# OS
+.AppleDouble
+.LSOverride
+._*
+
+# Optional: Cache
+.cache/
+*.cache
+
+# Optional: Analytics/Logs (if generated)
+*.log
+analytics-backup/
+
+# Keep everything else (HTML, CSS, JS, images, etc.)
+# These are NOT ignored - they're part of the website

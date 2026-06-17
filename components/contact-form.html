@@ -1,0 +1,33 @@
+<!-- contact-form.html — Contact/inquiry form -->
+<form data-form-type="contact" method="POST" action="/api/send-email" style="max-width: 600px; margin: 0 auto;">
+  <div class="form-group required">
+    <label for="fullname">Full Name *</label>
+    <input type="text" id="fullname" name="fullname" required>
+  </div>
+  <div class="form-group">
+    <label for="company">Company Name</label>
+    <input type="text" id="company" name="company">
+  </div>
+  <div class="form-group required">
+    <label for="email">Email Address *</label>
+    <input type="email" id="email" name="email" required>
+  </div>
+  <div class="form-group required">
+    <label for="phone">Phone Number *</label>
+    <input type="tel" id="phone" name="phone" required>
+  </div>
+  <div class="form-group">
+    <label for="enquiry-type">Enquiry Type</label>
+    <select id="enquiry-type" name="enquiryType">
+      <option value="General">General Inquiry</option>
+      <option value="Service">About Our Services</option>
+      <option value="Products">About Our Products</option>
+      <option value="Partnership">Partnership</option>
+    </select>
+  </div>
+  <div class="form-group required">
+    <label for="message">Message *</label>
+    <textarea id="message" name="message" required placeholder="Tell us more..."></textarea>
+  </div>
+  <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center;">Send Message</button>
+</form>
