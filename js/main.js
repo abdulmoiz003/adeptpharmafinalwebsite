@@ -271,31 +271,137 @@ function initCarousel(carouselSelector) {
   const carousel = document.querySelector(carouselSelector);
   if (!carousel) return;
 
-  const track = carousel.querySelector('.carousel-track');
-  const slides = carousel.querySelectorAll('.carousel-slide');
-  const prevBtn = carousel.querySelector('.carousel-prev');
-  const nextBtn = carousel.querySelector('.carousel-next');
+  const track = carousel.querySelector('.carousel-track') || carousel.querySelector('.hero-slider-track');
+  const slides = Array.from(carousel.querySelectorAll('.carousel-slide, .hero-slide'));
+  const prevBtn = carousel.querySelector('.carousel-prev, .hero-prev');
+  const nextBtn = carousel.querySelector('.carousel-next, .hero-next');
+  const dotsContainer = carousel.querySelector('.carousel-dots');
+  const heroCopy = carousel.querySelector('.hero-copy');
+
+  if (!track || !slides.length) return;
 
   let currentIndex = 0;
+  let touchStartX = null;
+  let autoplayTimer = null;
+  const autoplayDelay = 5000;
+
+  if (!carousel.hasAttribute('tabindex')) {
+    carousel.setAttribute('tabindex', '0');
+  }
+
+  function renderDots() {
+    if (!dotsContainer) return;
+
+    dotsContainer.innerHTML = '';
+
+    slides.forEach((slide, index) => {
+      const dot = document.createElement('button');
+      dot.type = 'button';
+      dot.className = 'carousel-dot';
+      dot.setAttribute('aria-label', `Go to slide ${index + 1}`);
+      dot.addEventListener('click', () => goToSlide(index));
+      dotsContainer.appendChild(dot);
+    });
+  }
 
   function updateCarousel() {
     const offset = -currentIndex * 100;
     track.style.transform = `translateX(${offset}%)`;
+
+    carousel.classList.toggle('hero-carousel--text-hidden', currentIndex !== 0);
+    if (heroCopy) {
+      heroCopy.setAttribute('aria-hidden', currentIndex !== 0 ? 'true' : 'false');
+    }
+
+    slides.forEach((slide, index) => {
+      const isActive = index === currentIndex;
+      slide.classList.toggle('is-active', isActive);
+      slide.setAttribute('aria-hidden', isActive ? 'false' : 'true');
+    });
+
+    if (dotsContainer) {
+      const dots = dotsContainer.querySelectorAll('.carousel-dot');
+      dots.forEach((dot, index) => {
+        dot.classList.toggle('active', index === currentIndex);
+      });
+    }
   }
+
+  function goToSlide(index) {
+    currentIndex = (index + slides.length) % slides.length;
+    updateCarousel();
+  }
+
+  function startAutoplay() {
+    if (slides.length < 2 || autoplayTimer) return;
+    autoplayTimer = window.setInterval(() => {
+      goToSlide(currentIndex + 1);
+    }, autoplayDelay);
+  }
+
+  function stopAutoplay() {
+    if (!autoplayTimer) return;
+    window.clearInterval(autoplayTimer);
+    autoplayTimer = null;
+  }
+
+  renderDots();
+  updateCarousel();
+  startAutoplay();
 
   if (prevBtn) {
     prevBtn.addEventListener('click', () => {
-      currentIndex = (currentIndex - 1 + slides.length) % slides.length;
-      updateCarousel();
+      goToSlide(currentIndex - 1);
     });
   }
 
   if (nextBtn) {
     nextBtn.addEventListener('click', () => {
-      currentIndex = (currentIndex + 1) % slides.length;
-      updateCarousel();
+      goToSlide(currentIndex + 1);
     });
   }
+
+  carousel.addEventListener('keydown', (event) => {
+    if (event.key === 'ArrowLeft') {
+      event.preventDefault();
+      goToSlide(currentIndex - 1);
+    }
+
+    if (event.key === 'ArrowRight') {
+      event.preventDefault();
+      goToSlide(currentIndex + 1);
+    }
+  });
+
+  carousel.addEventListener('touchstart', (event) => {
+    touchStartX = event.touches[0].clientX;
+  }, { passive: true });
+
+  carousel.addEventListener('touchend', (event) => {
+    if (touchStartX === null) return;
+
+    const touchEndX = event.changedTouches[0].clientX;
+    const deltaX = touchEndX - touchStartX;
+
+    if (Math.abs(deltaX) > 40) {
+      goToSlide(deltaX > 0 ? currentIndex - 1 : currentIndex + 1);
+    }
+
+    touchStartX = null;
+  }, { passive: true });
+
+  carousel.addEventListener('mouseenter', stopAutoplay);
+  carousel.addEventListener('mouseleave', startAutoplay);
+  carousel.addEventListener('focusin', stopAutoplay);
+  carousel.addEventListener('focusout', startAutoplay);
+
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) {
+      stopAutoplay();
+    } else {
+      startAutoplay();
+    }
+  });
 }
 
 // ========================================
@@ -569,6 +675,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initScrollAnimations();
   initLazyLoad();
   initCategoryFilter('.filter-btn', '[data-category]');
+  initCarousel('.hero-carousel');
 
   // Initialize specific components (called on pages that use them)
   // initCarousel('.testimonials-carousel');
