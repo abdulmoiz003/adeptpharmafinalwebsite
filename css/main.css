@@ -1229,6 +1229,14 @@ nav a:hover {
   background: linear-gradient(135deg, var(--color-dark-bg) 0%, var(--color-primary) 100%);
 }
 
+.hero.hero-carousel .container {
+  position: static;
+}
+
+.hero.hero-carousel .hero-grid {
+  position: relative;
+  z-index: 2;
+}
 .hero::before {
   content: '';
   position: absolute;
@@ -1279,6 +1287,10 @@ nav a:hover {
   display: none;
 }
 
+.hero-slide--no-overlay {
+  background-size: cover;
+  background-position: center bottom;
+}
 .hero-slide--hero-front {
   background-color: #0a0e1a;
   background-size: cover;
@@ -1362,6 +1374,9 @@ nav a:hover {
   z-index: 3;
 }
 
+.hero.hero-carousel .hero-controls {
+  z-index: 4;
+}
 .hero-arrow {
   width: 48px;
   height: 48px;
